@@ -1,62 +1,229 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- ===== UI ROOT =====
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+
+-- ===== TOGGLE BUTTON (HEART) =====
+local ToggleBtn = Instance.new("ImageButton")
+ToggleBtn.Size = UDim2.new(0, 70, 0, 70)
+ToggleBtn.Position = UDim2.new(0, 10, 0.5, -35)
+ToggleBtn.Image = "rbxassetid://120714933532572"
+ToggleBtn.BackgroundTransparency = 0
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+ToggleBtn.BorderSizePixel = 0
+ToggleBtn.ScaleType = Enum.ScaleType.Fit
+Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(0, 12)
+ToggleBtn.Parent = ScreenGui
+
+-- ===== MAIN MENU (INSPIRED BY UI) =====
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 280, 0, 320)
+Frame.Position = UDim2.new(0, 90, 0.5, -160)
+Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Frame.Visible = false
+Frame.Active = true
+Frame.Draggable = true
+Frame.BorderSizePixel = 2
+Frame.BorderColor3 = Color3.fromRGB(100, 100, 100)
+Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 16)
+Frame.Parent = ScreenGui
+
+-- Header bar (pink/red)
+local HeaderBar = Instance.new("Frame")
+HeaderBar.Size = UDim2.new(1, 0, 0, 50)
+HeaderBar.BackgroundColor3 = Color3.fromRGB(200, 80, 120)
+HeaderBar.BorderSizePixel = 0
+HeaderBar.Parent = Frame
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, -20, 1, 0)
+Title.Position = UDim2.new(0, 10, 0, 0)
+Title.Text = "Cosmos Autofarm"
+Title.TextColor3 = Color3.new(1, 1, 1)
+Title.BackgroundTransparency = 1
+Title.TextScaled = true
+Title.Font = Enum.Font.GothamBlack
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = HeaderBar
+
+-- Build info label
+local BuildLabel = Instance.new("TextLabel")
+BuildLabel.Size = UDim2.new(1, 0, 0, 25)
+BuildLabel.Position = UDim2.new(0, 0, 0, 50)
+BuildLabel.Text = "Build v1.0 | Cosmo"
+BuildLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+BuildLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+BuildLabel.TextScaled = true
+BuildLabel.Font = Enum.Font.Gotham
+BuildLabel.BorderSizePixel = 0
+BuildLabel.Parent = Frame
+
+-- Content area
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Size = UDim2.new(1, 0, 1, -75)
+ContentFrame.Position = UDim2.new(0, 0, 0, 75)
+ContentFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+ContentFrame.BorderSizePixel = 0
+ContentFrame.Parent = Frame
+
+-- ===== BUTTON MAKER (COLORFUL STYLE) =====
+local buttonColors = {
+    {Color3.fromRGB(100, 200, 100), "ESP"}, -- Green
+    {Color3.fromRGB(150, 100, 200), "NoClip"}, -- Purple
+    {Color3.fromRGB(100, 150, 200), "Autofarm"} -- Blue
+}
+
+local buttons = {}
+
+for i, colorData in pairs(buttonColors) do
+    local b = Instance.new("TextButton")
+    b.Size = UDim2.new(0.85, 0, 0, 45)
+    b.Position = UDim2.new(0.075, 0, 0, (i-1) * 55 + 15)
+    b.Text = colorData[2] .. ": OFF"
+    b.BackgroundColor3 = colorData[1]
+    b.TextColor3 = Color3.new(0, 0, 0)
+    b.Font = Enum.Font.GothamBlack
+    b.TextScaled = true
+    b.BorderSizePixel = 2
+    b.BorderColor3 = Color3.fromRGB(50, 50, 50)
+    b.AutoButtonColor = false
+    Instance.new("UICorner", b).CornerRadius = UDim.new(0, 8)
+    b.Parent = ContentFrame
+    
+    table.insert(buttons, {button = b, name = colorData[2], color = colorData[1]})
+end
+
+local EspBtn = buttons[1].button
+local NoclipBtn = buttons[2].button
+local AutofarmBtn = buttons[3].button
+
+-- ===== TOGGLE MENU WITH BUTTON =====
+ToggleBtn.MouseButton1Click:Connect(function()
+    Frame.Visible = not Frame.Visible
+end)
+
+-- ===== ESP =====
+local EspEnabled = false
+local EspObjects = {}
+
+local function clearESP()
+    for _, v in pairs(EspObjects) do
+        if v and v.Parent then
+            v:Destroy()
+        end
+    end
+    EspObjects = {}
+end
+
+local function addESP(part, text)
+    if not part:FindFirstChild("cosmosESP") then
+        local bill = Instance.new("BillboardGui")
+        bill.Name = "cosmosESP"
+        bill.Adornee = part
+        bill.Size = UDim2.new(4, 0, 4, 0)
+        bill.Parent = part
+        
+        local textLabel = Instance.new("TextLabel")
+        textLabel.Text = text
+        textLabel.TextColor3 = Color3.new(1, 0, 0)
+        textLabel.BackgroundTransparency = 1
+        textLabel.TextScaled = true
+        textLabel.Parent = bill
+        
+        table.insert(EspObjects, bill)
+    end
+end
+
+EspBtn.MouseButton1Click:Connect(function()
+    EspEnabled = not EspEnabled
+    EspBtn.Text = EspEnabled and "ESP: ON" or "ESP: OFF"
+    EspBtn.BackgroundColor3 = EspEnabled and Color3.fromRGB(150, 255, 150) or Color3.fromRGB(100, 200, 100)
+    
+    if not EspEnabled then
+        clearESP()
+    end
+end)
+
+-- ===== NOCLIP =====
+local NoclipEnabled = false
+local noclipConnection
+
+local function enableNoclip()
+    if noclipConnection then
+        noclipConnection:Disconnect()
+    end
+    
+    noclipConnection = RunService.Heartbeat:Connect(function()
+        if NoclipEnabled and LocalPlayer.Character then
+            local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end
+    end)
+end
+
+NoclipBtn.MouseButton1Click:Connect(function()
+    NoclipEnabled = not NoclipEnabled
+    NoclipBtn.Text = NoclipEnabled and "NoClip: ON" or "NoClip: OFF"
+    NoclipBtn.BackgroundColor3 = NoclipEnabled and Color3.fromRGB(200, 150, 255) or Color3.fromRGB(150, 100, 200)
+    
+    if NoclipEnabled then
+        enableNoclip()
+    elseif noclipConnection then
+        noclipConnection:Disconnect()
+        noclipConnection = nil
+        -- Re-enable collisions
+        if LocalPlayer.Character then
+            for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = true
+                end
+            end
+        end
+    end
+end)
+
+-- ===== AUTOFARM (PLACEHOLDER) =====
+local AutofarmEnabled = false
+
+AutofarmBtn.MouseButton1Click:Connect(function()
+    AutofarmEnabled = not AutofarmEnabled
+    AutofarmBtn.Text = AutofarmEnabled and "Autofarm: ON" or "Autofarm: OFF"
+    AutofarmBtn.BackgroundColor3 = AutofarmEnabled and Color3.fromRGB(150, 200, 255) or Color3.fromRGB(100, 150, 200)
+end)
+
+-- ===== ESP UPDATE LOOP =====
+RunService.Heartbeat:Connect(function()
+    if EspEnabled then
+        -- Add ESP to enemies/monsters
+        local workspace = game:GetService("Workspace")
+        if workspace:FindFirstChild("Mobs") then
+            for _, mob in pairs(workspace.Mobs:GetChildren()) do
+                addESP(mob, mob.Name)
+            end
+        end
+    end
+end)
 
 -- ===== AUTO SKILL CHECK =====
-local skillCheckEvent = game:GetService("ReplicatedStorage"):FindFirstChild("Events")
-if skillCheckEvent then
-    local skillUpdate = skillCheckEvent:FindFirstChild("SkillCheckUpdate")
-    if skillUpdate then
-        skillUpdate.OnClientInvoke = function()
-            return "Supercomplete"
+local function setupSkillCheck()
+    local replicatedStorage = game:GetService("ReplicatedStorage")
+    if replicatedStorage:FindFirstChild("Events") then
+        local events = replicatedStorage.Events
+        if events:FindFirstChild("SkillCheckUpdate") then
+            events.SkillCheckUpdate.OnClientInvoke = function()
+                return "Supercomplete"
+            end
         end
     end
 end
 
--- ===== UI ROOT =====
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "CosmosUI"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.IgnoreGuiInset = true
-ScreenGui.Parent = PlayerGui
-
--- ===== TOGGLE BUTTON (Left Side) =====
-local ToggleBtn = Instance.new("TextButton")
-ToggleBtn.Name = "ToggleButton"
-ToggleBtn.Size = UDim2.new(0, 70, 0, 70)
-ToggleBtn.Position = UDim2.new(0, 15, 0.5, -35)
-ToggleBtn.Text = "CAFM"
-ToggleBtn.TextScaled = true
-ToggleBtn.Font = Enum.Font.GothamBlack
-ToggleBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-ToggleBtn.TextColor3 = Color3.fromRGB(0, 255, 136)
-ToggleBtn.BorderSizePixel = 2
-ToggleBtn.BorderColor3 = Color3.fromRGB(0, 255, 136)
-ToggleBtn.AutoButtonColor = false
-ToggleBtn.Parent = ScreenGui
-
-local ToggleCorner = Instance.new("UICorner")
-ToggleCorner.CornerRadius = UDim.new(0, 10)
-ToggleCorner.Parent = ToggleBtn
-
--- ===== LAPTOP SCREEN WINDOW =====
-local LaptopScreen = Instance.new("Frame")
-LaptopScreen.Name = "LaptopScreen"
-LaptopScreen.Size = UDim2.new(0, 500, 0, 380)
-LaptopScreen.Position = UDim2.new(0.5, -250, 0.5, -190)
-LaptopScreen.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-LaptopScreen.Visible = false
-LaptopScreen.Active = true
-LaptopScreen.Parent = ScreenGui
-
-local ScreenCorner = Instance.new("UICorner")
-ScreenCorner.CornerRadius = UDim.new(0, 12)
-ScreenCorner.Parent = LaptopScreen
-
--- Bezel/Border effect
-local Bezel = Instance.new("Frame")
-Bezel.Size = UDim2.new(1, 0, 1, 0)
-Bezel.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-Bezel.
-
+setupSkillCheck(true)
