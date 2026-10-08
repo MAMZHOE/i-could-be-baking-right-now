@@ -1,0 +1,254 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- ===== AUTO SKILL CHECK (safe stub) =====
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local EventsFolder = ReplicatedStorage:FindFirstChild("Events")
+if EventsFolder and EventsFolder:FindFirstChild("SkillCheckUpdate") then
+    EventsFolder.SkillCheckUpdate.OnClientInvoke = function()
+        return "Supercomplete"
+    end
+end
+
+-- ===== SCREEN UI =====
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "CosmoOverlay"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent = PlayerGui
+
+-- ===== HEART TOGGLE BUTTON =====
+local ToggleBtn = Instance.new("ImageButton")
+ToggleBtn.Name = "ToggleButton"
+ToggleBtn.Size = UDim2.new(0, 64, 0, 64)
+ToggleBtn.Position = UDim2.new(0, 16, 0.5, -32)
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+ToggleBtn.BackgroundTransparency = 0
+ToggleBtn.BorderSizePixel = 0
+ToggleBtn.Image = "rbxassetid://120714933532572"
+ToggleBtn.ScaleType = Enum.ScaleType.Fit
+ToggleBtn.ImageRectOffset = Vector2.new(0, 0)
+ToggleBtn.ImageRectSize = Vector2.new(0, 0)
+ToggleBtn.Parent = ScreenGui
+
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(0, 14)
+ToggleCorner.Parent = ToggleBtn
+
+local ToggleStroke = Instance.new("UIStroke")
+ToggleStroke.Color = Color3.fromRGB(255, 255, 255)
+ToggleStroke.Thickness = 1
+ToggleStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+ToggleStroke.Parent = ToggleBtn
+
+-- ===== MAIN WINDOW =====
+local Frame = Instance.new("Frame")
+Frame.Name = "MainFrame"
+Frame.Size = UDim2.new(0, 540, 0, 320)
+Frame.Position = UDim2.new(0.5, -270, 0.5, -160)
+Frame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+Frame.BorderSizePixel = 0
+Frame.Visible = false
+Frame.Active = true
+Frame.Parent = ScreenGui
+
+local FrameCorner = Instance.new("UICorner")
+FrameCorner.CornerRadius = UDim.new(0, 16)
+FrameCorner.Parent = Frame
+
+-- outer bezel
+local Bezel = Instance.new("Frame")
+Bezel.Size = UDim2.new(1, -12, 1, -12)
+Bezel.Position = UDim2.new(0, 6, 0, 6)
+Bezel.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Bezel.BorderSizePixel = 0
+Bezel.Parent = Frame
+
+local BezelCorner = Instance.new("UICorner")
+BezelCorner.CornerRadius = UDim.new(0, 12)
+BezelCorner.Parent = Bezel
+
+-- top header
+local Header = Instance.new("Frame")
+Header.Size = UDim2.new(1, 0, 0, 58)
+Header.BackgroundColor3 = Color3.fromRGB(219, 98, 122)
+Header.BorderSizePixel = 0
+Header.Parent = Bezel
+
+local HeaderCorner = Instance.new("UICorner")
+HeaderCorner.CornerRadius = UDim.new(0, 10)
+HeaderCorner.Parent = Header
+
+local HeaderTitle = Instance.new("TextLabel")
+HeaderTitle.Size = UDim2.new(1, -90, 1, 0)
+HeaderTitle.Position = UDim2.new(0, 12, 0, 0)
+HeaderTitle.Text = "Cosmo"
+HeaderTitle.Font = Enum.Font.GothamBlack
+HeaderTitle.TextScaled = true
+HeaderTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+HeaderTitle.BackgroundTransparency = 1
+HeaderTitle.TextXAlignment = Enum.TextXAlignment.Left
+HeaderTitle.Parent = Header
+
+local BuildText = Instance.new("TextLabel")
+BuildText.Size = UDim2.new(0, 130, 0, 28)
+BuildText.Position = UDim2.new(1, -138, 0, 15)
+BuildText.Text = "Build 1.0"
+BuildText.Font = Enum.Font.GothamBold
+BuildText.TextScaled = true
+BuildText.TextColor3 = Color3.fromRGB(255, 255, 255)
+BuildText.BackgroundTransparency = 1
+BuildText.TextXAlignment = Enum.TextXAlignment.Right
+BuildText.Parent = Header
+
+-- content area
+local Content = Instance.new("Frame")
+Content.Size = UDim2.new(1, 0, 1, -58)
+Content.Position = UDim2.new(0, 0, 0, 58)
+Content.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+Content.BorderSizePixel = 0
+Content.Parent = Bezel
+
+local ContentCorner = Instance.new("UICorner")
+ContentCorner.CornerRadius = UDim.new(0, 10)
+ContentCorner.Parent = Content
+
+-- left info card
+local InfoCard = Instance.new("Frame")
+InfoCard.Size = UDim2.new(0.46, -12, 0.72, -12)
+InfoCard.Position = UDim2.new(0, 12, 0, 12)
+InfoCard.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+InfoCard.BorderSizePixel = 0
+InfoCard.Parent = Content
+
+local InfoCardCorner = Instance.new("UICorner")
+InfoCardCorner.CornerRadius = UDim.new(0, 10)
+InfoCardCorner.Parent = InfoCard
+
+local InfoTitle = Instance.new("TextLabel")
+InfoTitle.Size = UDim2.new(1, -20, 0, 28)
+InfoTitle.Position = UDim2.new(0, 10, 0, 8)
+InfoTitle.Text = "Info"
+InfoTitle.Font = Enum.Font.GothamBlack
+InfoTitle.TextScaled = true
+InfoTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+InfoTitle.BackgroundTransparency = 1
+InfoTitle.TextXAlignment = Enum.TextXAlignment.Left
+InfoTitle.Parent = InfoCard
+
+local SmallStatus = Instance.new("TextLabel")
+SmallStatus.Size = UDim2.new(1, -20, 0, 42)
+SmallStatus.Position = UDim2.new(0, 10, 0, 42)
+SmallStatus.Text = "Status: Ready"
+SmallStatus.Font = Enum.Font.GothamSemibold
+SmallStatus.TextScaled = true
+SmallStatus.TextColor3 = Color3.fromRGB(200, 200, 200)
+SmallStatus.BackgroundTransparency = 1
+SmallStatus.TextXAlignment = Enum.TextXAlignment.Left
+SmallStatus.Parent = InfoCard
+
+-- right action panel
+local RightPanel = Instance.new("Frame")
+RightPanel.Size = UDim2.new(0.46, -12, 0.72, -12)
+RightPanel.Position = UDim2.new(0.5, 6, 0, 12)
+RightPanel.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+RightPanel.BorderSizePixel = 0
+RightPanel.Parent = Content
+
+local RightCorner = Instance.new("UICorner")
+RightCorner.CornerRadius = UDim.new(0, 10)
+RightCorner.Parent = RightPanel
+
+local RightTitle = Instance.new("TextLabel")
+RightTitle.Size = UDim2.new(1, -20, 0, 28)
+RightTitle.Position = UDim2.new(0, 10, 0, 8)
+RightTitle.Text = "Tools"
+RightTitle.Font = Enum.Font.GothamBlack
+RightTitle.TextScaled = true
+RightTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+RightTitle.BackgroundTransparency = 1
+RightTitle.TextXAlignment = Enum.TextXAlignment.Left
+RightTitle.Parent = RightPanel
+
+-- button helper
+local function makeButton(parent, label, y, color)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0.88, 0, 0, 38)
+    btn.Position = UDim2.new(0.06, 0, 0, y)
+    btn.Text = label
+    btn.Font = Enum.Font.GothamBlack
+    btn.TextScaled = true
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.BackgroundColor3 = color
+    btn.BorderSizePixel = 0
+    btn.AutoButtonColor = false
+    btn.Parent = parent
+
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 8)
+    btnCorner.Parent = btn
+
+    return btn
+end
+
+local EspBtn = makeButton(Content, "ESP: OFF", 120, Color3.fromRGB(86, 181, 121))
+local NoclipBtn = makeButton(Content, "NOCLIP: OFF", 168, Color3.fromRGB(130, 102, 204))
+local AutofarmBtn = makeButton(Content, "AUTOFARM: OFF", 216, Color3.fromRGB(96, 149, 208))
+
+-- bottom tiny toggle buttons like reference
+local DotA = Instance.new("Frame")
+DotA.Size = UDim2.new(0, 18, 0, 18)
+DotA.Position = UDim2.new(0, 22, 1, -38)
+DotA.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+DotA.Parent = Frame
+local DotACorner = Instance.new("UICorner")
+DotACorner.CornerRadius = UDim.new(1, 0)
+DotACorner.Parent = DotA
+
+local DotB = Instance.new("Frame")
+DotB.Size = UDim2.new(0, 18, 0, 18)
+DotB.Position = UDim2.new(0, 52, 1, -38)
+DotB.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+DotB.Parent = Frame
+local DotBCorner = Instance.new("UICorner")
+DotBCorner.CornerRadius = UDim.new(1, 0)
+DotBCorner.Parent = DotB
+
+-- toggle button behavior
+ToggleBtn.MouseButton1Click:Connect(function()
+    Frame.Visible = not Frame.Visible
+end)
+
+-- optional visual toggles
+local states = {
+    ESP = false,
+    NOCLIP = false,
+    AUTOFARM = false
+}
+
+local function setBtnText(btn, key)
+    if key == "ESP" then
+        btn.Text = states.ESP and "ESP: ON" or "ESP: OFF"
+    elseif key == "NOCLIP" then
+        btn.Text = states.NOCLIP and "NOCLIP: ON" or "NOCLIP: OFF"
+    elseif key == "AUTOFARM" then
+        btn.Text = states.AUTOFARM and "AUTOFARM: ON" or "AUTOFARM: OFF"
+    end
+end
+
+EspBtn.MouseButton1Click:Connect(function()
+    states.ESP = not states.ESP
+    setBtnText(EspBtn, "ESP")
+end)
+
+NoclipBtn.MouseButton1Click:Connect(function()
+    states.NOCLIP = not states.NOCLIP
+    setBtnText(NoclipBtn, "NOCLIP")
+end)
+
+AutofarmBtn.MouseButton1Click:Connect(function()
+    states.AUTOFARM = not states.AUTOFARM
+    setBtnText(AutofarmBtn, "AUTOFARM")
+end)
