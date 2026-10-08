@@ -1,0 +1,14 @@
+function_onResponse()
+--print ("oh? hi sprout!!!)
+local itterate = http_request:getresponse()
+local occupation = iterate:GetStringField(id goes here.)
+print(occupation)
+end
+
+local vr_var = SimLabUtils:GetVariableByName(userid)
+-- id = ""
+
+Local Base_Url = [put url here]
+Local Full_Url = Base_URL .. ID
+
+http_request = simlabutils:NewHttpRequest()
