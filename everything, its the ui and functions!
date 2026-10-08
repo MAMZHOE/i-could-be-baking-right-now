@@ -143,4 +143,4 @@ NoclipBtn.MouseButton1Click:Connect(function()
     end
 end)
 
-print("Nox Mobile Script Loaded")
+print("wassup gang, you loaded successfully!")
