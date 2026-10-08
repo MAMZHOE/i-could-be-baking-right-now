@@ -1,0 +1,180 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- Screen UI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "MobileMenu"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.Parent = PlayerGui
+
+-- ===== TASKBAR (Bottom) =====
+local Taskbar = Instance.new("Frame")
+Taskbar.Name = "Taskbar"
+Taskbar.Size = UDim2.new(1, 0, 0, 50)
+Taskbar.Position = UDim2.new(0, 0, 1, -50)
+Taskbar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Taskbar.BorderSizePixel = 0
+Taskbar.Parent = ScreenGui
+
+local TaskbarCorner = Instance.new("UICorner")
+TaskbarCorner.CornerRadius = UDim.new(0, 0)
+TaskbarCorner.Parent = Taskbar
+
+-- Taskbar label
+local TaskbarLabel = Instance.new("TextLabel")
+TaskbarLabel.Size = UDim2.new(0, 200, 1, 0)
+TaskbarLabel.Position = UDim2.new(0, 12, 0, 0)
+TaskbarLabel.Text = "CAFM"
+TaskbarLabel.Font = Enum.Font.GothamBlack
+TaskbarLabel.TextScaled = true
+TaskbarLabel.TextColor3 = Color3.fromRGB(0, 255, 136)
+TaskbarLabel.BackgroundTransparency = 1
+TaskbarLabel.Parent = Taskbar
+
+-- Window toggle button (taskbar)
+local WindowBtn = Instance.new("TextButton")
+WindowBtn.Name = "WindowButton"
+WindowBtn.Size = UDim2.new(0, 180, 1, 0)
+WindowBtn.Position = UDim2.new(0, 12, 0, 0)
+WindowBtn.Text = "COSMOS AUTOFARM FOR MOBILE"
+WindowBtn.Font = Enum.Font.GothamSemibold
+WindowBtn.TextScaled = true
+WindowBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+WindowBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+WindowBtn.BorderSizePixel = 1
+WindowBtn.BorderColor3 = Color3.fromRGB(0, 255, 136)
+WindowBtn.AutoButtonColor = false
+WindowBtn.Parent = Taskbar
+
+-- ===== MAIN WINDOW =====
+local MainWindow = Instance.new("Frame")
+MainWindow.Name = "MainWindow"
+MainWindow.Size = UDim2.new(0, 380, 0, 320)
+MainWindow.Position = UDim2.new(0.5, -190, 0.5, -160)
+MainWindow.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainWindow.Visible = true
+MainWindow.Active = true
+MainWindow.Parent = ScreenGui
+
+local WindowCorner = Instance.new("UICorner")
+WindowCorner.CornerRadius = UDim.new(0, 8)
+WindowCorner.Parent = MainWindow
+
+-- Window title bar
+local TitleBar = Instance.new("Frame")
+TitleBar.Size = UDim2.new(1, 0, 0, 35)
+TitleBar.BackgroundColor3 = Color3.fromRGB(0, 255, 136)
+TitleBar.BorderSizePixel = 0
+TitleBar.Parent = MainWindow
+
+local TitleBarCorner = Instance.new("UICorner")
+TitleBarCorner.CornerRadius = UDim.new(0, 8)
+TitleBarCorner.Parent = TitleBar
+
+local WindowTitle = Instance.new("TextLabel")
+WindowTitle.Size = UDim2.new(1, -60, 1, 0)
+WindowTitle.Position = UDim2.new(0, 10, 0, 0)
+WindowTitle.Text = "COSMOS AUTOFARM FOR MOBILE"
+WindowTitle.Font = Enum.Font.GothamBlack
+WindowTitle.TextScaled = true
+WindowTitle.TextColor3 = Color3.fromRGB(20, 20, 20)
+WindowTitle.BackgroundTransparency = 1
+WindowTitle.TextXAlignment = Enum.TextXAlignment.Left
+WindowTitle.Parent = TitleBar
+
+-- Close button
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Size = UDim2.new(0, 35, 1, 0)
+CloseBtn.Position = UDim2.new(1, -40, 0, 0)
+CloseBtn.Text = "X"
+CloseBtn.Font = Enum.Font.GothamBlack
+CloseBtn.TextScaled = true
+CloseBtn.TextColor3 = Color3.fromRGB(20, 20, 20)
+CloseBtn.BackgroundTransparency = 1
+CloseBtn.BorderSizePixel = 0
+CloseBtn.AutoButtonColor = false
+CloseBtn.Parent = TitleBar
+
+-- Window content
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Size = UDim2.new(1, 0, 1, -35)
+ContentFrame.Position = UDim2.new(0, 0, 0, 35)
+ContentFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+ContentFrame.BorderSizePixel = 0
+ContentFrame.Parent = MainWindow
+
+local ContentCorner = Instance.new("UICorner")
+ContentCorner.CornerRadius = UDim.new(0, 8)
+ContentCorner.Parent = ContentFrame
+
+-- Button maker
+local function makeButton(label, y)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0.9, 0, 0, 50)
+    btn.Position = UDim2.new(0.05, 0, 0, y)
+    btn.Text = label
+    btn.Font = Enum.Font.GothamBlack
+    btn.TextScaled = true
+    btn.TextColor3 = Color3.new(1, 1, 1)
+    btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    btn.BorderSizePixel = 2
+    btn.BorderColor3 = Color3.fromRGB(0, 255, 136)
+    btn.AutoButtonColor = false
+    btn.Parent = ContentFrame
+
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 6)
+    btnCorner.Parent = btn
+
+    -- Hover effect
+    btn.MouseEnter:Connect(function()
+        btn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+    end)
+
+    btn.MouseLeave:Connect(function()
+        btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    end)
+
+    return btn
+end
+
+local ToggleA = makeButton("ESP: OFF", 20)
+local ToggleB = makeButton("NOCLIP: OFF", 85)
+local ToggleC = makeButton("AUTOFARM: OFF", 150)
+
+local states = {
+    A = false,
+    B = false,
+    C = false
+}
+
+local function updateButton(btn, key)
+    btn.Text = (key == "A" and "ESP: " or (key == "B" and "NOCLIP: " or "AUTOFARM: ")) .. (states[key] and "ON" or "OFF")
+end
+
+-- Toggle window visibility
+WindowBtn.MouseButton1Click:Connect(function()
+    MainWindow.Visible = not MainWindow.Visible
+end)
+
+CloseBtn.MouseButton1Click:Connect(function()
+    MainWindow.Visible = false
+end)
+
+-- Button functionality
+ToggleA.MouseButton1Click:Connect(function()
+    states.A = not states.A
+    updateButton(ToggleA, "A")
+end)
+
+ToggleB.MouseButton1Click:Connect(function()
+    states.B = not states.B
+    updateButton(ToggleB, "B")
+end)
+
+ToggleC.MouseButton1Click:Connect(function()
+    states.C = not states.C
+    updateButton(ToggleC, "C")
+end)
