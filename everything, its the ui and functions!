@@ -81,4 +81,7 @@ local function addESP(part, text)
         bill.Name = "cosmosESP"
         bill.Adornee = part
         bill.Size = U
-
+===SKILLAUTOMATION===
+Game.ReplicatedStorage.Events.SkillCheckUpdate.OnClientInvoke Function = ()
+return "Supercomplete"
+end
