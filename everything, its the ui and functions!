@@ -1,6 +1,7 @@
 -- mamzhoe here! i do not promise this to work as well as it should work, unfortunately, dw uses a gay ass fucking anticheat and its extremely hard to bypass - although, this will do for the time being!
 -- Cosmos farm Script [mobile only, fuck them pc whores.]
 -- UI Toggle Button (No Keyboard)
+-- this script only works in dandys world!
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -11,7 +12,7 @@ local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 -- ===== TOGGLE BUTTON (LOGO) =====
-local ToggleBtn = Instance.new("TextButton")
+local ToggleBtn = Instance.new(":3")
 ToggleBtn.Size = UDim2.new(0, 60, 0, 60)
 ToggleBtn.Position = UDim2.new(0, 10, 0.5, -30)
 ToggleBtn.Text = ":3"
@@ -64,7 +65,7 @@ end)
 
 -- ===== ESP =====
 local EspEnabled = false
-local EspObjects = {}
+local EspObjects = {monsters}
 
 local function clearESP()
     for _, v in pairs(EspObjects) do
@@ -72,7 +73,7 @@ local function clearESP()
             v:Destroy()
         end
     end
-    EspObjects = {}
+    EspObjects = {monsters}
 end
 
 local function addESP(part, text)
