@@ -8,50 +8,54 @@ local LocalPlayer = Players.LocalPlayer
 
 -- ===== UI ROOT =====
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Parent = game.CoreGui
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 -- ===== TOGGLE BUTTON (LOGO) =====
-local ToggleBtn = Instance.new("TextButton", ScreenGui)
+local ToggleBtn = Instance.new("TextButton")
 ToggleBtn.Size = UDim2.new(0, 60, 0, 60)
 ToggleBtn.Position = UDim2.new(0, 10, 0.5, -30)
 ToggleBtn.Text = ":3"
 ToggleBtn.TextScaled = true
-ToggleBtn.BackgroundColor3 = Color3.fromRGB(50,50,50)
-ToggleBtn.TextColor3 = Color3.new(1,1,1)
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+ToggleBtn.TextColor3 = Color3.new(1, 1, 1)
 ToggleBtn.Draggable = true
-Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(1,0)
+Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(1, 0)
+ToggleBtn.Parent = ScreenGui
 
 -- ===== MAIN MENU =====
-local Frame = Instance.new("Frame", ScreenGui)
+local Frame = Instance.new("Frame")
 Frame.Size = UDim2.new(0, 230, 0, 180)
 Frame.Position = UDim2.new(0, 80, 0.5, -90)
-Frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
-Frame.Visible = true
+Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Frame.Visible = false
 Frame.Active = true
 Frame.Draggable = true
-Instance.new("UICorner", Frame).CornerRadius = UDim.new(0,12)
+Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 12)
+Frame.Parent = ScreenGui
 
-local Title = Instance.new("TextLabel", Frame)
-Title.Size = UDim2.new(1,0,0,40)
-Title.Text = "COsmos Mobile Menu"
-Title.TextColor3 = Color3.new(1,1,1)
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.Text = "Cosmos Mobile Menu"
+Title.TextColor3 = Color3.new(1, 1, 1)
 Title.BackgroundTransparency = 1
 Title.TextScaled = true
+Title.Parent = Frame
 
 -- ===== BUTTON MAKER =====
 local function makeButton(text, y)
-    local b = Instance.new("TextButton", Frame)
-    b.Size = UDim2.new(0.9,0,0,40)
-    b.Position = UDim2.new(0.05,0,0,y)
+    local b = Instance.new("TextButton")
+    b.Size = UDim2.new(0.9, 0, 0, 40)
+    b.Position = UDim2.new(0.05, 0, 0, y)
     b.Text = text
-    b.BackgroundColor3 = Color3.fromRGB(60,60,60)
-    b.TextColor3 = Color3.new(1,1,1)
+    b.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    b.TextColor3 = Color3.new(1, 1, 1)
     Instance.new("UICorner", b)
+    b.Parent = Frame
     return b
 end
 
-local EspBtn = makeButton("ESP: OFF", 0.3)
-local NoclipBtn = makeButton("NoClip: OFF", 0.6)
+local EspBtn = makeButton("ESP: OFF", 50)
+local NoclipBtn = makeButton("NoClip: OFF", 100)
 
 -- ===== TOGGLE MENU WITH BUTTON =====
 ToggleBtn.MouseButton1Click:Connect(function()
@@ -63,7 +67,7 @@ local EspEnabled = false
 local EspObjects = {}
 
 local function clearESP()
-    for _,v in pairs(EspObjects) do
+    for _, v in pairs(EspObjects) do
         if v and v.Parent then
             v:Destroy()
         end
@@ -73,74 +77,8 @@ end
 
 local function addESP(part, text)
     if not part:FindFirstChild("cosmosESP") then
-        local bill = Instance.new("BillboardGui", part)
-        bill.Name = "NoxESP"
-        bill.Size = UDim2.new(0,200,0,50)
-        bill.AlwaysOnTop = true
+        local bill = Instance.new("BillboardGui")
+        bill.Name = "cosmosESP"
+        bill.Adornee = part
+        bill.Size = U
 
-        local tl = Instance.new("TextLabel", bill)
-        tl.Size = UDim2.new(1,0,1,0)
-        tl.BackgroundTransparency = 1
-        tl.Text = text
-        tl.TextColor3 = Color3.new(1,0,0)
-        tl.TextScaled = true
-
-        table.insert(EspObjects, bill)
-    end
-end
-
-local function updateESP()
-    clearESP()
-    for _,v in pairs(workspace:GetDescendants()) do
-        if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") then
-            local name = string.lower(v.Name)
-            if string.find(name, "monster") or string.find(name, "machine") then
-                addESP(v.HumanoidRootPart, v.Name)
-            end
-        end
-    end
-end
-
-EspBtn.MouseButton1Click:Connect(function()
-    EspEnabled = not EspEnabled
-    if EspEnabled then
-        EspBtn.Text = "ESP: ON"
-        updateESP()
-    else
-        EspBtn.Text = "ESP: OFF"
-        clearESP()
-    end
-end)
-
--- ===== SAFE NOCLIP (MOBILE) =====
-local NoclipEnabled = false
-
-RunService.Stepped:Connect(function()
-    if NoclipEnabled and LocalPlayer.Character then
-        for _,part in pairs(LocalPlayer.Character:GetChildren()) do
-            if part:IsA("BasePart") then
-                if part.Name ~= "HumanoidRootPart" then
-                    part.CanCollide = false
-                end
-            end
-        end
-    end
-end)
-
-NoclipBtn.MouseButton1Click:Connect(function()
-    NoclipEnabled = not NoclipEnabled
-    if NoclipEnabled then
-        NoclipBtn.Text = "NoClip: ON"
-    else
-        NoclipBtn.Text = "NoClip: OFF"
-        if LocalPlayer.Character then
-            for _,part in pairs(LocalPlayer.Character:GetChildren()) do
-                if part:IsA("BasePart") then
-                    part.CanCollide = true
-                end
-            end
-        end
-    end
-end)
-
-print("wassup gang, you loaded successfully!")
